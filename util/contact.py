@@ -56,5 +56,6 @@ class Contact(object):
             elif menu == 4:
                 print("종료")
                 break
+            else: print("잘못된 입력")
 
 Contact.main()

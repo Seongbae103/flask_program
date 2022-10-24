@@ -43,8 +43,7 @@ class Culcurator(object):
     def print_result(ls):
         print("###계산###")
         print("*******************")
-        for i in ls:
-            i.print_fi()
+        ([i.print_fi() for i in ls])
         print("*******************")
 
 

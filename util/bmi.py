@@ -3,7 +3,7 @@ class Bmi(object):
         self.name = name
         self.h = h
         self.kg = kg
-        self.get_biman()
+        self.biman = ""
 
     def get_bmi(self):
         m = self.h / 100

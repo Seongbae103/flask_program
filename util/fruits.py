@@ -1,6 +1,6 @@
 class Fruit(object):
-    def __init__(self):
-        pass
+    def __init__(self,fname):
+        self.fname = fname
 
     @staticmethod
     def print_menu():
@@ -11,7 +11,7 @@ class Fruit(object):
         return int(input("실행 메뉴 : "))
 
     @classmethod
-    def add_fruit():
+    def add_fruit(ls):
         return Fruit(input("과일 이름 : "))
 
     @staticmethod
@@ -24,6 +24,7 @@ class Fruit(object):
                 ls.append(Fruit.add_fruit())
             elif menu == 2:
                 print("과일 목록")
+                Fruit.add_fruit(ls)
             elif menu == 3:
                 print("삭제")
             elif menu == 4:
