@@ -16,15 +16,8 @@ class Person(object):
         self.num = num
         self.addr = addr
         self.gender =""
-        self.set_age
+        self.age = 0
 
-    @staticmethod
-    def print_menu():
-        print("1. 등록")
-        print("2. 조회")
-        print("3. 탈퇴")
-        print("4. 종료")
-        return int(input("실행 : "))
     @staticmethod
     def new_person():
         name = input("이름 : ")
@@ -48,42 +41,24 @@ class Person(object):
                 self.gender = "남자"
             elif gen == 4:
                 self.gender = "여자"
+            return self.birth
 
-    @property
     def set_age(self):
         current = 2022
-        return current - self.birth + 1
+        self.age = current - self.birth + 1
 
-    def print_info(self):
-        print("### 자기소개서 ###" 
-              "\n ********************************" 
-              f"\n 이름 : {self.name}" 
-              f"\n 성별 : {self.gender}" 
-              f"\n 나이 : {self.set_age}"
-              f"\n 주소 : {self.addr}"
-              "\n ********************************")
+    def __str__(self):
+        return f"{self.name} {self.gender} {self.age} {self.addr}"
+
     @staticmethod
     def print_list(ls):
-        [i.print_info() for i in ls]
+        print("************************************")
+        print("이름 성별 나이 주소")
+        print("************************************")
+        [print(i) for i in ls]
+        print("************************************")
 
     @staticmethod
     def delete(ls, name):
         del ls[[i for i, j in ls if j.name == name][0]]
 
-    @staticmethod
-    def main():
-        ls = []
-        while True:
-            menu = Person.print_menu()
-            if menu == 1:
-                print("회원등록")
-                ls.append(Person.new_person())
-            elif menu == 2:
-                print("주민 목록")
-                Person.print_list(ls)
-            elif menu == 3:
-                print("삭제")
-                Person.delete(ls, input("삭제할 이름 : "))
-            elif menu == 4:
-                print("종료")
-Person.main()

@@ -15,5 +15,5 @@ class Bubble(object):
     @staticmethod
     def main():
         bubble = Bubble()
-        Bubble.print()
+        bubble.print()
 Bubble.main()

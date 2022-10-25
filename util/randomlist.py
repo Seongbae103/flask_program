@@ -12,6 +12,8 @@ class RandomList(object):
         print(self.get_random(1, 100, 10))
 
 
-if __name__ == "__main__":
+    @staticmethod
+    def main():
         rl = RandomList()
         rl.print()
+RandomList.main()

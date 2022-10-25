@@ -6,12 +6,13 @@
 사용자의 input 값이 12인 경우
 출력값이 12, 48만 되도록 한다.
 '''
-
 from randomlist import RandomList
+
 class SearchNumber(object):
     def __init__(self, num):
         self.num = num
-    def print(self):
+
+    def print_menu(self):
         rl = RandomList().get_random(10, 100, 10)
         print(rl)
         for i in rl:
@@ -20,7 +21,7 @@ class SearchNumber(object):
 
     @staticmethod
     def main():
-        num = int(input("단위 : "))
+        num = int(input("input : "))
         searchnumber = SearchNumber(num)
-        searchnumber.print()
+        searchnumber.print_menu()
 SearchNumber.main()

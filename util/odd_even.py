@@ -1,12 +1,23 @@
+import random
+
 class OddEven(object):
     def __init__(self):
         pass
-    def excute(self):
-        pass
+
+    def get_random(self, start, end, count):
+        return random.sample(range(start, end), k = count)
+    def checker(self):
+        rl = self.get_random(10, 100, 10)
+        print(rl)
+        for i in rl:
+            if i % 2 == 0:
+                print(i)
 
     @staticmethod
     def main():
-        odd_even = OddEven
-        odd_even.print()
+        ls = []
+        odd_even = OddEven()
+        ls.append(odd_even.checker())
 
-OddEven.excute()
+
+OddEven.main()
