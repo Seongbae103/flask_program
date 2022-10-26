@@ -1,18 +1,12 @@
-from titanic.template import Plot
-from titanic.views import TitanicController
+from titanic.views import TtareungyiController
 from util.common import Common
 
-if __name__ == '__main__':
-    api = TitanicController()
+api = TtareungyiController()
 while True:
     menu = Common.menu(["종료", "시각화", "모델링", "머신러닝", "배포"])
     if menu == "0": break
     elif menu == "1":
         print("### 시각화 ###")
-        plot = Plot("train.csv")
-        plot.draw_survived()
-        plot.draw_pclass()
-        plot.draw_sex()
     elif menu == "2":
         print("### 모델링 ###")
     elif menu == "3":

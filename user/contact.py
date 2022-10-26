@@ -29,7 +29,4 @@ class Contact(object):
         print("**********************")
     @staticmethod
     def delete(ls, name):
-        for i, j in enumerate(ls):
-            if j.name == name:
-                del ls[i]
-
+        del ls[[i for i, j in enumerate(ls) if j.name == name]]
