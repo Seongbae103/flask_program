@@ -36,7 +36,16 @@ class TitanicModel(object):
 
     @staticmethod
     def create_train(this) ->object:
-        pass
+        return this.train.drop('Survived', aixs = 1)
 
-    def create_label(self):
-        pass
+    @staticmethod
+    def create_label(this) -> object:
+        return this.train['Survived']
+
+    @staticmethod
+    def drop_features(this, *feature) -> object:
+        for i in feature:
+            this.train = this.train.drop(i, aixs = 1)  #i값 칼럼을 삭제
+            this.test = this.train[i]
+        return this
+
