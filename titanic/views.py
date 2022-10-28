@@ -19,12 +19,12 @@ class TitanicController(object):
         this.test = model.new_model(test)
         this.id = this.test['PassengerId']
         # columns 편집과정
-        this = model.pclass_ordinal(this)
         this = model.sex_nominal(this)
         this = model.age_ordinal(this)
         this = model.fare_ordinal(this)
         this = model.embarked_nominal(this)
         return this
+
     def modeling(self, train, test) -> object: #모델 생성
         model = self.model
         this = self.preprocess(train, test)
@@ -37,3 +37,9 @@ class TitanicController(object):
 
     def submit(self): # 배포
         pass
+
+if __name__ =='__main__':
+    c = TitanicController()
+    this = c.preprocess('train.csv','test.csv')
+    print(this.train.columns)
+    print(this.train.head())
