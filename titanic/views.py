@@ -18,14 +18,18 @@ class TitanicController(object):
         this.train = model.new_model(train)
         this.test = model.new_model(test)
         this.id = this.test['PassengerId']
+        # columns 편집과정
+        this = model.pclass_ordinal(this)
+        this = model.sex_nominal(this)
+        this = model.age_ordinal(this)
+        this = model.fare_ordinal(this)
+        this = model.embarked_nominal(this)
         return this
     def modeling(self, train, test) -> object: #모델 생성
         model = self.model
         this = self.preprocess(train, test)
         this.label = model.create_label(this)
         this.train = model.create_train(this)
-        #columns 편집과정
-
         return this
 
     def learning(self): #기계 학습

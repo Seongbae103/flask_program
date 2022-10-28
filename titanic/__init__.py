@@ -23,7 +23,6 @@ if __name__ == '__main__':
         elif menu == "2":
             print("### 모델링 ###")
             df = api.modeling('train.csv', 'test.csv')
-
         elif menu == "3":
             print("### 머신러닝 ###")
             df = api.learning('train.csv', 'test.csv')

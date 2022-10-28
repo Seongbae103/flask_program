@@ -3,13 +3,19 @@ import pandas as pd
 from util.dataset import Dataset
 
 '''
- ['PassengerId', 'Survived', 'Pclass', 'Name', 'Sex', 'Age', 'SibSp',
-         'Parch', 'Ticket', 'Fare', 'Cabin', 'Embarked']
-         === null 값 ===
-         age    177
-         cabin  687
-         Embark   2
-   '''
+['PassengerId', 'Survived', 'Pclass', 'Name', 'Sex', 'Age', 'SibSp',
+        'Parch', 'Ticket', 'Fare', 'Cabin', 'Embarked']
+시각화를 동해 얻은 상관관계 변수(veriable = feature =column)는
+Pclass
+Sex
+Age
+Fare
+Embarked
+=== null 값 ===
+age    177
+cabin  687
+Embark   2
+'''
 
 class TitanicModel(object):
 
@@ -46,6 +52,49 @@ class TitanicModel(object):
     def drop_features(this, *feature) -> object:
         for i in feature:
             this.train = this.train.drop(i, aixs = 1)  #i값 칼럼을 삭제
-            this.test = this.train[i]
+            this.test = this.train.drop(i, aixs = 1)
         return this
 
+    ''''
+    @staticmethod                        #데이터 자체가 이미 ordinal이라 로직을 짤 필요x 
+    def pclass_ordinal(this, pclass):
+        train = this.train
+        test = this.test
+        return this'''
+
+    @staticmethod
+    def sex_nominal(this):
+        for i in [this.train, this.test]:
+            i['Gender'] = i['Sex'].map({"male": 0, "female": 1})
+        return this
+    @staticmethod
+    def age_ordinal(this):
+        train = this.train
+        test = this.test
+        return this
+
+    @staticmethod
+    def fare_ordinal(this):
+        for i in [this.train, this.test]:
+           i['FareBand'] = pd.qcut(i['Fare'], 4, labels={1, 2, 3, 4})
+        return this
+
+    @staticmethod
+    def embarked_nominal(this):
+        #{"S":1, "C":2, "Q":3}
+        this.train = this.train.fillna({"Embarked": 'S'})
+        this.test = this.test.fillna({"Embarked": 'S'})
+        for i in [this.train, this.test]:
+            i['port'] = i['Embarked'].map({"S" : 1, "C" : 2, "Q" : 3})
+        return this
+
+if __name__ =='__main__':
+    t = TitanicModel()
+    this = Dataset()
+    this.train = t.new_model('train.csv')
+    this.test = t.new_model('test.csv')
+    this = TitanicModel.sex_nominal(this)
+    this = TitanicModel.fare_ordinal(this)
+    this = TitanicModel.embarked_nominal(this)
+    print(this.train.columns)
+    print(this.train.head())
