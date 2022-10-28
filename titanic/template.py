@@ -18,7 +18,7 @@ class Plot(object):
 
     def draw_survived(self):
         this = self.entry
-        f, ax = plt.subplots(1, 2, figsize=(18, 8)) # 한 화면에 두 개의 그래프를 그릴 떄는 복수형subplots
+        f, ax = plt.subplots(1, 2, figsize=(18, 8))
         this['Survived'].value_counts().plot.pie(explode=[0, 0.1], autopct='%1.1f%%', ax=ax[0], shadow=True)
         ax[0].set_title('0. 사망자 vs 1. 생존자')
         ax[0].set_ylabel('')

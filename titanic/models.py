@@ -52,16 +52,9 @@ class TitanicModel(object):
     @staticmethod
     def drop_features(this, *feature) -> object:
         for i in feature:
-            this.train = this.train.drop(i, aixs = 1)  #i값 칼럼을 삭제
+            this.train = this.train.drop(i, aixs = 1)
             this.test = this.train.drop(i, aixs = 1)
         return this
-
-    ''''
-    @staticmethod                        #데이터 자체가 이미 ordinal이라 로직을 짤 필요x 
-    def pclass_ordinal(this, pclass):
-        train = this.train
-        test = this.test
-        return this'''
 
     @staticmethod
     def sex_nominal(this):
@@ -71,7 +64,7 @@ class TitanicModel(object):
     @staticmethod
     def age_ordinal(this):
         for i in [this.train, this.test]:
-            i['Age'] = i['Age'].fillna(-0.5)    #-0.5 연령 미상
+            i['Age'] = i['Age'].fillna(-0.5)
         bins = [-1, 0, 5, 12, 18, 24, 35, 68, np.inf]
         labels = ['Unknown', 'Baby', 'Child', 'Teenager', 'Student', 'Young Adult', 'Adult', 'Senior']
         age_mapping = {'Unknown': 0, 'Baby': 1, 'Child': 2, 'Teenager': 3, 'Student': 4, 'Young Adult': 5, 'Adult': 6, 'Senior': 7}
@@ -88,7 +81,7 @@ class TitanicModel(object):
 
     @staticmethod
     def embarked_nominal(this):
-        #{"S":1, "C":2, "Q":3}
+
         this.train = this.train.fillna({"Embarked": 'S'})
         this.test = this.test.fillna({"Embarked": 'S'})
         for i in [this.train, this.test]:
