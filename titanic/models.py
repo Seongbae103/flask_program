@@ -43,7 +43,7 @@ class TitanicModel(object):
 
     @staticmethod
     def create_train(this) ->object:
-        return this.train.drop('Survived', aixs = 1)
+        return this.train.drop('Survived', axis=1)
 
     @staticmethod
     def create_label(this) -> object:
@@ -52,8 +52,8 @@ class TitanicModel(object):
     @staticmethod
     def drop_features(this, *feature) -> object:
         for i in feature:
-            this.train = this.train.drop(i, aixs = 1)
-            this.test = this.train.drop(i, aixs = 1)
+            this.train = this.train.drop(i, axis = 1)
+            this.test = this.train.drop(i, axis = 1)
         return this
 
     @staticmethod

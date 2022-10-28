@@ -38,6 +38,7 @@ class TitanicController(object):
         pass
 
 if __name__ =='__main__':
-    this = TitanicController().preprocess('train.csv','test.csv')
+    c = TitanicController()
+    this = c.modeling('train.csv','test.csv')
     print(this.train.columns)
     print(this.train.head())
