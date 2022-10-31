@@ -22,6 +22,10 @@ class TitanicController(object):
         this = model.age_ordinal(this)
         this = model.fare_ordinal(this)
         this = model.embarked_nominal(this)
+        this = model.title_nominal(this)
+        this = model.drop_features(this,
+                                   'PassengerId', 'Name', 'Sex', 'Age',
+                                   'SibSp', 'Parch', 'Ticket', 'Fare', 'Cabin')
         return this
 
     def modeling(self, train, test) -> object:
@@ -39,6 +43,8 @@ class TitanicController(object):
 
 if __name__ =='__main__':
     c = TitanicController()
+    this = Dataset()
     this = c.modeling('train.csv','test.csv')
     print(this.train.columns)
     print(this.train.head())
+    print(this.lena)
