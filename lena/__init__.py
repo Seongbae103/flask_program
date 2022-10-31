@@ -1,5 +1,6 @@
 import cv2
-from lena.lana_view import LenaControll
+
+from lena.lenna_view import LennaControll
 from util.common import Common
 
 
@@ -21,7 +22,7 @@ cv2.IMREAD_UNCHANGED : 이미지파일을 alpha channel까지 포함하여 읽�
 '''
 if __name__ == '__main__':
 
-    api = LenaControll()
+    api = LennaControll()
     while True:
         menu = Common.menu(["종료", "원본", "모델링", "머신러닝", "배포"])
         if menu == "0":

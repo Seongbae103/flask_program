@@ -1,12 +1,12 @@
 import cv2
 
-from lena.lane_model import LenaModel
+from lena.lenna_model import LennaModel
 from util.dataset import Dataset
 
 
 class LenaControll(object):
     dataset = Dataset()
-    model = LenaModel()
+    model = LennaModel()
     def __init__(self):
         pass
     def __str__(self):
@@ -21,6 +21,6 @@ class LenaControll(object):
         return img
 
 if __name__ == '__main__':
-    model = LenaModel()
+    model = LennaModel()
     this = Dataset()
     this = model.new_lena_model()

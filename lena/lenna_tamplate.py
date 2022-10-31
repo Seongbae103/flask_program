@@ -1,7 +1,7 @@
 from util.dataset import Dataset
 
 
-class LenaPlot(object):
+class LennaPlot(object):
     datadet = Dataset()
     def __init__(self):
         pass
