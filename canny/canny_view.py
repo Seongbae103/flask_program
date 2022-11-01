@@ -1,11 +1,11 @@
 import cv2
 
-from lenna.models import LennaModel
+from canny.canny_model import LennaModel
 from titanic.models import TitanicModel
 from util.dataset import Dataset
 
 
-class LennaController(object):
+class CannyController(object):
     model = LennaModel()
 
     def __init__(self):

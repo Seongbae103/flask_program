@@ -6,6 +6,17 @@ from PIL import Image
 from util.dataset import Dataset
 import matplotlib.pyplot as plt
 
+class CannyModel(object):
+    def __init__(self):
+        self.ADAPTIVE_THRESH_MEAN_C = 0
+        self.ADAPTIVE_THRESH_GAUSSIAN_C = 1
+        self.THRESH_BINARY = 2
+        self.THRESH_BINARY_INV = 3
+        self.cm = Image.open(BytesIO(requests.get("https://docs.opencv.org/4.x/roi.jpg", headers={'User-Agent': 'My User Agent 1.0'}).content))
+
+    def get(self):
+        return self.cm
+
 class LennaModel(object):
 
     dataset = Dataset()
@@ -194,28 +205,6 @@ class Canny(object):
                         pass
         return img
 
-class CannyModel(object):
-    def __init__(self):
-        headers = {'User-Agent': 'My User Agent 1.0'}
-        res = requests.get("https://docs.opencv.org/4.x/roi.jpg", headers=headers)
-        self.cannymodel = Image.open(BytesIO(res.content))
-    def get(self):
-        return np.array(self.cannymodel)
-
-    def messi(self):
-        img = cv2.imread("https://docs.opencv.org/4.x/roi.jpg", 0)
-        edge1 = cv2.Canny(img, 50, 200)
-        edge2 = cv2.Canny(img, 100, 200)
-        edge3 = cv2.Canny(img, 170, 200)
-
-        cv2.imshow('original', img)
-        cv2.imshow('Canny Edge1', edge1)
-        cv2.imshow('Canny Edge2', edge2)
-        cv2.imshow('Canny Edge2', edge3)
-
-        cv2.waitKey(0)
-        cv2.destrotAllWindows()
-
 def filter2D(src, kernel, delta=0):
     # 가장자리 픽셀을 (커널의 길이 // 2) 만큼 늘리고 새로운 행렬에 저장
     halfX = kernel.shape[0] // 2
@@ -243,8 +232,9 @@ def gray_scale(img):
 
 
 if __name__ == '__main__':
-    img = gray_scale(LennaModel().get())
+    '''img = gray_scale(LennaModel().get())
     img = GaussianBlur(img, 1, 1).get()
     img = Canny(img, 50, 150).get()
 
-    imshow(img)
+    imshow(img)'''
+    CannyModel()

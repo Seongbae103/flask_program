@@ -5,8 +5,8 @@ import requests
 from PIL import Image
 from matplotlib import pyplot as plt
 
-from lenna.models import CannyModel
-from lenna.views import LennaController
+from canny.canny_model import CannyModel
+from canny.canny_view import CannyController
 from util.common import Common
 
 '''
@@ -28,7 +28,7 @@ cv2.destroyAllWindows() 화면에 나타난 윈도우를 종료합니다.
                         일반적으로 위 3개는 같이 사용됩니다.
 '''
 if __name__ == '__main__':
-    api = LennaController()
+    api = CannyController()
     while True:
         menu = Common.menu(["0-종료", "1-원본보기", "2-그레이스케일",
                             "3-엣지검출", "9-테스트"])
@@ -65,8 +65,7 @@ if __name__ == '__main__':
             # img = cv.imread(img, 0)
             ### 메모리에서 읽는 경우 BEGIN ###
             fname = "https://docs.opencv.org/4.x/roi.jpg"
-            img = Image.open(BytesIO(requests.get(fname,
-                         headers={'User-Agent': 'My User Agent 1.0'}).content))
+            img = Image.open(BytesIO(requests.get(fname, headers={'User-Agent': 'My User Agent 1.0'}).content))
             print(f'img type : {type(img)}')
             img = np.array(img)
             ### 메모리에서 읽는 경우 END ###
