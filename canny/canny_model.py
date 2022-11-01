@@ -1,10 +1,25 @@
 from io import BytesIO
 import cv2
 import numpy as np
+import pandas as pd
 import requests
 from PIL import Image
 from util.dataset import Dataset
 import matplotlib.pyplot as plt
+
+class CannyModel(object):
+    def __init__(self):
+        self.ADAPTIVE_THRESH_MEAN_C = 0
+        self.ADAPTIVE_THRESH_GAUSSIAN_C = 1
+        self.THRESH_BINARY = 2
+        self.THRESH_BINARY_INV = 3
+        headers = {'User-Agent': 'My User Agent 1.0'}
+        res = requests.get("https://docs.opencv.org/4.x/roi.jpg",
+                           headers=headers)
+        self.lsj = Image.open(BytesIO(res.content))
+
+    def get(self):
+        return np.array(self.lsj)
 
 class LennaModel(object):
 
@@ -16,29 +31,29 @@ class LennaModel(object):
         self.THRESH_BINARY = 2
         self.THRESH_BINARY_INV = 3
         headers = {'User-Agent': 'My User Agent 1.0'}
-        res = requests.get("https://docs.opencv.org/4.x/roi.jpg", headers=headers)
+        res = requests.get("https://upload.wikimedia.org/wikipedia/ko/2/24/Lenna.png", headers=headers)
         self.lenna = Image.open(BytesIO(res.content))
-
 
     def get(self):
         return np.array(self.lenna)
-    def new_lena_model(self, fname) ->object:
-        img = cv2.imread('./data/'+fname)
+
+    def new_model(self, fname) -> object:
+        img = cv2.imread('./data/' + fname)
         return img
 
     def canny(self, src):
         src = self.gaussian_filter(src)
-        src = self.culc_gradient(src)
-        src = self.non_maximum_supression(src)
+        src = self.calc_gradient(src)
+        src = self.non_maximum_suppression(src)
         src = self.edge_tracking(src)
 
-    def culc_gradient(self):
+    def calc_gradient(self):
         pass
 
-    def non_maximum_supression(self):
+    def non_maximum_suppression(self):
         pass
 
-    def edge_tracking(self, src, blocksize, adaptiveMethod, thresholdType, C):
+    def edge_tracking(self, src, adaptiveMethod, thresholdType, blocksize, C):
         mask = np.zeros((blocksize, blocksize))
         if adaptiveMethod == self.ADAPTIVE_THRESH_MEAN_C:
             pass
@@ -82,7 +97,6 @@ class LennaModel(object):
                         dst[x, y] = 255
         return dst
 
-
 class GaussianBlur(object):
     def __init__(self, src, sigmax, sigmay):
         self.src = src
@@ -101,12 +115,11 @@ class GaussianBlur(object):
         maskT = np.exp(-(j ** 2 / (2 * sigmay ** 2))) / (np.sqrt(2 * np.pi) * sigmay)
         mask = mask[:, np.newaxis]
         maskT = maskT[:, np.newaxis].T
-        return filter2D(filter2D(src, mask), maskT)  # 두 번 필터링
-
+        return filter2D(filter2D(src, mask), maskT)  # 두번 필터링
 
 
 class Canny(object):
-    def __init__(self, src, lowThreshold, highThreshold):
+    def __init__(self, src, lowThreshold,highThreshold):
         self.src = src
         self.lowThreshold = lowThreshold
         self.highThreshold = highThreshold
@@ -115,6 +128,7 @@ class Canny(object):
         src = self.src
         lowThreshold = self.lowThreshold
         highThreshold = self.highThreshold
+
         Kx = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])  # x축 소벨 행렬로 미분
         Ky = np.array([[1, 2, 1], [0, 0, 0], [-1, -2, -1]])  # y축 소벨 행렬로 미분
         Ix = filter2D(src, Kx)
@@ -194,28 +208,6 @@ class Canny(object):
                         pass
         return img
 
-class CannyModel(object):
-    def __init__(self):
-        headers = {'User-Agent': 'My User Agent 1.0'}
-        res = requests.get("https://docs.opencv.org/4.x/roi.jpg", headers=headers)
-        self.cannymodel = Image.open(BytesIO(res.content))
-    def get(self):
-        return np.array(self.cannymodel)
-
-    def messi(self):
-        img = cv2.imread("https://docs.opencv.org/4.x/roi.jpg", 0)
-        edge1 = cv2.Canny(img, 50, 200)
-        edge2 = cv2.Canny(img, 100, 200)
-        edge3 = cv2.Canny(img, 170, 200)
-
-        cv2.imshow('original', img)
-        cv2.imshow('Canny Edge1', edge1)
-        cv2.imshow('Canny Edge2', edge2)
-        cv2.imshow('Canny Edge2', edge3)
-
-        cv2.waitKey(0)
-        cv2.destrotAllWindows()
-
 def filter2D(src, kernel, delta=0):
     # 가장자리 픽셀을 (커널의 길이 // 2) 만큼 늘리고 새로운 행렬에 저장
     halfX = kernel.shape[0] // 2
@@ -233,18 +225,19 @@ def filter2D(src, kernel, delta=0):
             dst[x, y] = (kernel * cornerPixel[x: x + kernel.shape[0], y: y + kernel.shape[1]]).sum() + delta
     return dst
 
+def gray_scale(img):
+    dst = img[:, :, 0] * 0.114 + img[:, :, 1] * 0.587 + img[:, :, 2] * 0.229  # GRAYSCALE 변환 공식
+    return dst
 def imshow(img):
     img = Image.fromarray(img)
     plt.imshow(img)
     plt.show()
-def gray_scale(img):
-    dst = img[:, :, 0] * 0.114 + img[:, :, 1] * 0.587 + img[:, :, 2] * 0.229  # GRAYSCALE 변환 공식
-    return dst
-
 
 if __name__ == '__main__':
+    '''
     img = gray_scale(LennaModel().get())
     img = GaussianBlur(img, 1, 1).get()
     img = Canny(img, 50, 150).get()
-
     imshow(img)
+    '''
+    CannyModel()
