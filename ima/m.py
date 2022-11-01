@@ -1,3 +1,5 @@
+import cv2
+
 from util.dataset import Dataset
 
 
@@ -8,7 +10,9 @@ class LModel(object):
     def __str__(self):
         pass
 
-    def preprocess(self):
-        pass
-    def modeling(self):
-        pass
+    def new_model(self, fname):
+        this = Dataset()
+        this.context = './data/'
+        img = cv2.imread(this.context + fname)
+        return img
+

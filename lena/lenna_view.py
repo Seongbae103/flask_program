@@ -4,7 +4,7 @@ from lena.lenna_model import LennaModel
 from util.dataset import Dataset
 
 
-class LenaControll(object):
+class LennaControll(object):
     dataset = Dataset()
     model = LennaModel()
     def __init__(self):
