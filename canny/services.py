@@ -1,112 +1,20 @@
 from io import BytesIO
-import cv2
+
+import cv2 as cv
 import numpy as np
-import pandas as pd
 import requests
 from PIL import Image
+
+from const.crawler import HEADERS
 from util.dataset import Dataset
 import matplotlib.pyplot as plt
 
-class CannyModel(object):
-    def __init__(self):
-        self.ADAPTIVE_THRESH_MEAN_C = 0
-        self.ADAPTIVE_THRESH_GAUSSIAN_C = 1
-        self.THRESH_BINARY = 2
-        self.THRESH_BINARY_INV = 3
-        headers = {'User-Agent': 'My User Agent 1.0'}
-        res = requests.get("https://docs.opencv.org/4.x/roi.jpg",
-                           headers=headers)
-        self.lsj = Image.open(BytesIO(res.content))
+def ImageToNumberArray(url):
+    # URL = "https://upload.wikimedia.org/wikipedia/ko/2/24/Lenna.png"
+        return np.array(Image.open(BytesIO(requests.get(url, headers=HEADERS).content)))
 
-    def get(self):
-        return np.array(self.lsj)
 
-class LennaModel(object):
-
-    dataset = Dataset()
-
-    def __init__(self):
-        self.ADAPTIVE_THRESH_MEAN_C = 0
-        self.ADAPTIVE_THRESH_GAUSSIAN_C = 1
-        self.THRESH_BINARY = 2
-        self.THRESH_BINARY_INV = 3
-        headers = {'User-Agent': 'My User Agent 1.0'}
-        res = requests.get("https://upload.wikimedia.org/wikipedia/ko/2/24/Lenna.png", headers=headers)
-        self.lenna = Image.open(BytesIO(res.content))
-
-    def get(self):
-        return np.array(self.lenna)
-
-    def new_model(self, fname) -> object:
-        img = cv2.imread('./data/' + fname)
-        return img
-
-    def canny(self, src):
-        src = self.gaussian_filter(src)
-        src = self.calc_gradient(src)
-        src = self.non_maximum_suppression(src)
-        src = self.edge_tracking(src)
-
-    def calc_gradient(self):
-        pass
-
-    def non_maximum_suppression(self):
-        pass
-
-    def edge_tracking(self, src, adaptiveMethod, thresholdType, blocksize, C):
-        mask = np.zeros((blocksize, blocksize))
-        if adaptiveMethod == self.ADAPTIVE_THRESH_MEAN_C:
-            pass
-        elif adaptiveMethod == self.ADAPTIVE_THRESH_GAUSSIAN_C:
-            sigma = (blocksize - 1) / 8
-            i = np.arange(-(blocksize // 2), (blocksize // 2) + 1)
-            j = np.arange(-(blocksize // 2), (blocksize // 2) + 1)
-            i, j = np.meshgrid(i, j)
-            mask = np.exp(-((i ** 2 / (2 * sigma ** 2)) + (j ** 2 / (2 * sigma ** 2)))) / (2 * np.pi * sigma * sigma)
-        else:
-            return -1
-        # 가장자리 픽셀을 (커널의 길이 // 2) 만큼 늘리고 새로운 행렬에 저장
-        halfX = blocksize // 2
-        halfY = blocksize // 2
-        cornerPixel = np.zeros((src.shape[0] + halfX * 2, src.shape[1] + halfY * 2), dtype=np.uint8)
-
-        # (커널의 길이 // 2) 만큼 가장자리에서 안쪽(여기서는 1만큼 안쪽)에 있는 픽셀들의 값을 입력 이미지의 값으로 바꾸어 가장자리에 0을 추가한 효과를 봄
-        cornerPixel[halfX:cornerPixel.shape[0] - halfX, halfY:cornerPixel.shape[1] - halfY] = src
-
-        dst = np.zeros((src.shape[0], src.shape[1]), dtype=np.float64)
-
-        for y in np.arange(src.shape[1]):
-            for x in np.arange(src.shape[0]):
-                # 필터링 연산
-                threshold = 0
-                if adaptiveMethod == self.ADAPTIVE_THRESH_MEAN_C:
-                    threshold = cornerPixel[x: x + mask.shape[0], y: y + mask.shape[1]].mean() - C
-
-                elif adaptiveMethod == self.ADAPTIVE_THRESH_GAUSSIAN_C:
-                    threshold = (mask * cornerPixel[x: x + mask.shape[0], y: y + mask.shape[1]]).sum() / mask.sum() - C
-
-                if thresholdType == self.THRESH_BINARY:
-                    if cornerPixel[x, y] > threshold:
-                        dst[x, y] = 255
-                    else:
-                        dst[x, y] = 0
-                elif thresholdType == self.THRESH_BINARY_INV:
-                    if cornerPixel[x, y] > threshold:
-                        dst[x, y] = 0
-                    else:
-                        dst[x, y] = 255
-        return dst
-
-class GaussianBlur(object):
-    def __init__(self, src, sigmax, sigmay):
-        self.src = src
-        self.sigmax = sigmax
-        self.sigmay = sigmay
-
-    def get(self):
-        sigmax = self.sigmax
-        sigmay = self.sigmay
-        src = self.src
+def GaussianBlur(src, sigmax, sigmay):
         # 가로 커널과 세로 커널 행렬을 생성
         i = np.arange(-4 * sigmax, 4 * sigmax + 1)
         j = np.arange(-4 * sigmay, 4 * sigmay + 1)
@@ -115,20 +23,10 @@ class GaussianBlur(object):
         maskT = np.exp(-(j ** 2 / (2 * sigmay ** 2))) / (np.sqrt(2 * np.pi) * sigmay)
         mask = mask[:, np.newaxis]
         maskT = maskT[:, np.newaxis].T
-        return filter2D(filter2D(src, mask), maskT)  # 두번 필터링
+        return filter2D(filter2D(src, mask), maskT)  # 두 번 필터링
 
 
-class Canny(object):
-    def __init__(self, src, lowThreshold,highThreshold):
-        self.src = src
-        self.lowThreshold = lowThreshold
-        self.highThreshold = highThreshold
-
-    def get(self):
-        src = self.src
-        lowThreshold = self.lowThreshold
-        highThreshold = self.highThreshold
-
+def Canny(src, lowThreshold, highThreshold):
         Kx = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])  # x축 소벨 행렬로 미분
         Ky = np.array([[1, 2, 1], [0, 0, 0], [-1, -2, -1]])  # y축 소벨 행렬로 미분
         Ix = filter2D(src, Kx)
@@ -225,19 +123,28 @@ def filter2D(src, kernel, delta=0):
             dst[x, y] = (kernel * cornerPixel[x: x + kernel.shape[0], y: y + kernel.shape[1]]).sum() + delta
     return dst
 
-def gray_scale(img):
-    dst = img[:, :, 0] * 0.114 + img[:, :, 1] * 0.587 + img[:, :, 2] * 0.229  # GRAYSCALE 변환 공식
-    return dst
-def imshow(img):
-    img = Image.fromarray(img)
-    plt.imshow(img)
-    plt.show()
+
+    '''람다식 프로토타입
+    def new_model(self,fname) -> object:
+    img = cv2.imread('./data/'+fname)
+    return img'''
+
+
+def image_read(fname) -> object:
+    return (lambda x: cv.imread('./data/'+x))(fname)
+
+
+
 
 if __name__ == '__main__':
+    URL = "https://docs.opencv.org/4.x/roi.jpg"
+    arr = ImageToNumberArray(URL)
+    img = (lambda x: x[:, :, 0] * 0.114 + x[:, :, 1] * 0.587 + x[:, :, 2] * 0.229)(arr)#get은 __str__과 같은 맥락
+    img = Canny(GaussianBlur(img, 1, 1), 50, 150)
+    plt.imshow(lambda x: Image.fromarray(x))(img)
+    plt.show()
     '''
-    img = gray_scale(LennaModel().get())
-    img = GaussianBlur(img, 1, 1).get()
-    img = Canny(img, 50, 150).get()
     imshow(img)
+    img = Canny(img)
+    GaussianBulr()
     '''
-    CannyModel()

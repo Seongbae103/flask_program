@@ -13,7 +13,7 @@ if __name__ == '__main__':
             break
         elif menu == "1":
             print('원본')
-            img = View.modeling('lena.jpg')
+            img = View.modeling('canny.jpg')
             print(f' shape in {img.shape}')
             cv2.imshow('Gray', img)
             cv2.waitKey(0)

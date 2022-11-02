@@ -35,6 +35,12 @@
 
 ### 잡음(Noise)
 ##### 가우시안 잡음(Gaussian Noise)
+    #가우시안 필터
+    mask = np.exp(-(i ** 2 / (2 * sigmax ** 2))) / (np.sqrt(2 * np.pi) * sigmax)
+            maskT = np.exp(-(j ** 2 / (2 * sigmay ** 2))) / (np.sqrt(2 * np.pi) * sigmay)
+            mask = mask[:, np.newaxis]
+            maskT = maskT[:, np.newaxis].T
+            return filter2D(filter2D(src, mask), maskT)
 ##### 점 잡음(Salt-And-Pepper Noise)
 
 ### 수학적 형태학
@@ -51,9 +57,19 @@
 ##### 전역 임계치 결정
 ##### 적응적 임계치 결정
 
+### 영상 처리
+##### HoG(Histogram of Oriented Gradient) 서술자 -> 움직이는 사람
+##### blob(Binary Large OBject) -> 멀티미디어 객체
+##### LoG(Laplacian of Gaussian)
+##### DoG(Difference of Gaussian)
+##### SIFT(Scale Invariant Feature Transform)
+##### 동차좌표
+##### k-d 트리
+##### RANSAC <span> (RANdom SAmple Consensus)
+
 ### 순서
-1. RBG제거
-        def gray_scale(self, img):
+1. RBG제거 -> #그레이 스케일 변환공식 사용
+        def gray_scale(self, img):    
         dst = img[:, :, 0] * 0.114 + img[:, :, 1] * 0.587 + img[:, :, 2] * 0.229  # GRAYSCALE 변환 공식
         return dst
 2. 
