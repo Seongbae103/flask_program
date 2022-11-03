@@ -15,8 +15,10 @@ class Dataset(object):
     def __str__(self):
         return ""
         pass
+
     @property
-    def context(self) -> str: return self._context
+    def context(self) -> str: return './data/'
+
 
     @context.setter
     def context(self, context): self._context = context
@@ -50,3 +52,4 @@ class Dataset(object):
 
     @label.setter
     def label(self, label): self._label = label
+

@@ -133,7 +133,44 @@ def filter2D(src, kernel, delta=0):
 def image_read(fname) -> object:
     return (lambda x: cv.imread('./data/'+x))(fname)
 
+def ExcuteLambda(*params):
+    cmd = params[0]
+    target = params[1]
+    if cmd == 'IMAGE_READ':
+        return (lambda x: cv.imread('./data/'+x))(target)
+    elif cmd == 'GRAY_SCALE':
+        return (lambda x: x[:, :, 0] * 0.114 + x[:, :, 1] * 0.587 + x[:, :, 2] * 0.229)(target)
+    elif cmd == 'IMAGE_FROM_ARRAY':
+        return (lambda x: Image.fromarray(x))(target)
 
+def Hough(edges):
+    lines = cv.HoughLinesP(edges, 1, np.pi / 180., 120, minLineLength=50, maxLineGap=5)
+    dst = cv.cvtColor(edges, cv.COLOR_GRAY2BGR)
+    if lines is not None:
+        for i in range(lines.shape[0]):
+            pt1 = (lines[i][0][0], lines[i][0][1])
+            pt2 = (lines[i][0][2], lines[i][0][3])
+            cv.line(dst, pt1, pt2, (255, 0, 0), 2, cv.LINE_AA)
+    return dst
+
+def Haar(*params):
+    dst = params[0]
+    face = params[1]
+    img = params[2]
+    lines = params[3]
+    if lines is not None:
+        for i in range(lines.shape[0]):
+            pt1 = (lines[i][0][0], lines[i][0][1])
+            pt2 = (lines[i][0][2], lines[i][0][3])
+            cv.line(dst, pt1, pt2, (255, 0, 0), 2, cv.LINE_AA)
+    if len(face) == 0:
+        print("얼굴인식 실패")
+        quit()
+    for (x, y, w, h) in face:
+        print(f'얼굴의 좌표 : {x},{y},{w},{h}')
+        red = (255, 0, 0)
+        face = cv.rectangle(img, (x, y), (x + w, y + h), red, thickness=20)
+    return face
 
 
 if __name__ == '__main__':
