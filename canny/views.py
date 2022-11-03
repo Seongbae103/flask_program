@@ -40,14 +40,13 @@ class LennaControll(object):
 
     @staticmethod
     def menu_4(*params):
-        print(params[0])
         img = ImageToNumberArray(params[1])
         edges = cv.Canny(img, 100, 200) #(imgae, threshold 1=100 ,threshold_2= 200)
         dst = Hough(edges)
         plt.subplot(121), plt.imshow(img, cmap='gray')
         plt.title('Original Image'), plt.xticks([]), plt.yticks([])
         plt.subplot(122), plt.imshow(dst, cmap='gray')
-        plt.title('Edge Image'), plt.xticks([]), plt.yticks([])
+        plt.title('Canny Image'), plt.xticks([]), plt.yticks([])
         plt.show()
 
     @staticmethod

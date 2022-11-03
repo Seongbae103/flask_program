@@ -23,6 +23,7 @@ CAT = "cat.jpg"
 if __name__ == '__main__':
 
     api = LennaControll()
+
     while True:
         menus = ["종료", "원본", "그레이스케일", "엣지검출", "직선검출", "얼굴 인식", "얼굴", "모자이크"]
         menu = Common.menu(menus)

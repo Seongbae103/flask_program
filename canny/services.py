@@ -9,6 +9,9 @@ from const.crawler import HEADERS
 from util.dataset import Dataset
 import matplotlib.pyplot as plt
 
+def image_read(fname) -> object:
+    return (lambda x: cv.imread('./data/'+x))(fname)
+
 def ImageToNumberArray(url):
     # URL = "https://upload.wikimedia.org/wikipedia/ko/2/24/Lenna.png"
         return np.array(Image.open(BytesIO(requests.get(url, headers=HEADERS).content)))
@@ -130,8 +133,6 @@ def filter2D(src, kernel, delta=0):
     return img'''
 
 
-def image_read(fname) -> object:
-    return (lambda x: cv.imread('./data/'+x))(fname)
 
 def ExcuteLambda(*params):
     cmd = params[0]
