@@ -1,3 +1,4 @@
+import copy
 from io import BytesIO
 
 import cv2 as cv
@@ -6,6 +7,7 @@ import requests
 from PIL import Image
 
 from const.crawler import HEADERS
+from const.path import HAAR
 from util.dataset import Dataset
 import matplotlib.pyplot as plt
 
@@ -28,7 +30,7 @@ def GaussianBlur(src, sigmax, sigmay):
         maskT = maskT[:, np.newaxis].T
         return filter2D(filter2D(src, mask), maskT)  # 두 번 필터링
 
-
+'''
 def Canny(src, lowThreshold, highThreshold):
         Kx = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])  # x축 소벨 행렬로 미분
         Ky = np.array([[1, 2, 1], [0, 0, 0], [-1, -2, -1]])  # y축 소벨 행렬로 미분
@@ -108,7 +110,7 @@ def Canny(src, lowThreshold, highThreshold):
                     except IndexError as e:
                         pass
         return img
-
+'''
 def filter2D(src, kernel, delta=0):
     # 가장자리 픽셀을 (커널의 길이 // 2) 만큼 늘리고 새로운 행렬에 저장
     halfX = kernel.shape[0] // 2
@@ -125,53 +127,62 @@ def filter2D(src, kernel, delta=0):
             # 필터링 연산
             dst[x, y] = (kernel * cornerPixel[x: x + kernel.shape[0], y: y + kernel.shape[1]]).sum() + delta
     return dst
-
+def canny(params):
+    return cv.canny(params)
 
     '''람다식 프로토타입
     def new_model(self,fname) -> object:
     img = cv2.imread('./data/'+fname)
     return img'''
 
-
-
-def ExcuteLambda(*params):
-    cmd = params[0]
-    target = params[1]
-    if cmd == 'IMAGE_READ':
-        return (lambda x: cv.imread('./data/'+x))(target)
-    elif cmd == 'GRAY_SCALE':
-        return (lambda x: x[:, :, 0] * 0.114 + x[:, :, 1] * 0.587 + x[:, :, 2] * 0.229)(target)
-    elif cmd == 'IMAGE_FROM_ARRAY':
-        return (lambda x: Image.fromarray(x))(target)
-
 def Hough(edges):
     lines = cv.HoughLinesP(edges, 1, np.pi / 180., 120, minLineLength=50, maxLineGap=5)
-    dst = cv.cvtColor(edges, cv.COLOR_GRAY2BGR)
+    hough = cv.cvtColor(edges, cv.COLOR_GRAY2BGR)
     if lines is not None:
         for i in range(lines.shape[0]):
             pt1 = (lines[i][0][0], lines[i][0][1])
             pt2 = (lines[i][0][2], lines[i][0][3])
-            cv.line(dst, pt1, pt2, (255, 0, 0), 2, cv.LINE_AA)
-    return dst
+            cv.line(hough, pt1, pt2, (255, 0, 0), 2, cv.LINE_AA)
+
 
 def Haar(*params):
-    dst = params[0]
-    face = params[1]
-    img = params[2]
-    lines = params[3]
-    if lines is not None:
-        for i in range(lines.shape[0]):
-            pt1 = (lines[i][0][0], lines[i][0][1])
-            pt2 = (lines[i][0][2], lines[i][0][3])
-            cv.line(dst, pt1, pt2, (255, 0, 0), 2, cv.LINE_AA)
-    if len(face) == 0:
+    HAAR = params[0]
+    img = params[1]
+    haar = HAAR.detectMultiScale(img, minSize=(150, 150))
+    if haar.size == 0:
         print("얼굴인식 실패")
         quit()
+    for (x, y, w, h) in haar:
+        print(f'얼굴의 좌표 : {x},{y},{w},{h}')
+        cv.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), thickness=20)
+    return (x, y, x + w, y + h)
+
+def Mosaic(img, rect, size):
+    (x1, y1, x2, y2) = rect
+    w = x2 - x1
+    h = y2 - y1
+    i_rect = img[y1:y2, x1:x2]
+    i_small = cv.resize(i_rect, (size, size))
+    i_mos = cv.resize(i_small, (w, h), interpolation=cv.INTER_AREA)
+    img2 = img.copy()
+    img2[y1:y2, x1:x2] = i_mos
+    return img2
+
+
+def Mosaics(img, size):
+    haar = cv.CascadeClassifier(HAAR)
+    dst = img.copy()
+    face = haar.detectMultiScale(dst, minSize=(150, 150))
     for (x, y, w, h) in face:
         print(f'얼굴의 좌표 : {x},{y},{w},{h}')
-        red = (255, 0, 0)
-        face = cv.rectangle(img, (x, y), (x + w, y + h), red, thickness=20)
-    return face
+        (x1, y1, x2, y2) = (x, y, (x+w), (y+h))
+        w = x2 - x1
+        h = y2 - y1
+        i_rect = img[y1:y2, x1:x2]
+        i_small = cv.resize(i_rect, (size, size))
+        i_mos = cv.resize(i_small, (w, h), interpolation=cv.INTER_AREA)
+        dst[y1:y2, x1:x2] = i_mos
+    return dst
 
 
 if __name__ == '__main__':

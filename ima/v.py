@@ -8,7 +8,7 @@ class View(object):
         pass
     model = LModel()
     def preprocess(self, fname):
-        img = self.model.new_model('canny.jpg')
+        img = self.model.new_model('mosaic.jpg')
         return img
 
     def modeling(self, fname):
