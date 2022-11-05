@@ -1,14 +1,11 @@
 import copy
 from io import BytesIO
-
 import cv2 as cv
 import numpy as np
 import requests
 from PIL import Image
-
 from const.crawler import HEADERS
-from const.path import HAAR
-from util.dataset import Dataset
+from const.path import HAAR, CTX
 import matplotlib.pyplot as plt
 
 def image_read(fname) -> object:
@@ -18,6 +15,59 @@ def ImageToNumberArray(url):
     # URL = "https://upload.wikimedia.org/wikipedia/ko/2/24/Lenna.png"
         return np.array(Image.open(BytesIO(requests.get(url, headers=HEADERS).content)))
 
+def Canny(param):
+    return cv.Canny(np.array(param), 50, 51)
+
+def Hough(param):
+    lines = cv.HoughLinesP(param, 1, np.pi / 180., 10, minLineLength=50, maxLineGap=5)
+    dst = cv.cvtColor(param, cv.COLOR_GRAY2BGR)
+    if lines is not None:
+        for i in range(lines.shape[0]):
+            pt1 = (lines[i][0][0], lines[i][0][1])
+            pt2 = (lines[i][0][2], lines[i][0][3])
+            cv.line(dst, pt1, pt2, (255, 0, 0), 2, cv.LINE_AA)
+    return dst
+
+def Haar(param):
+    haar = cv.CascadeClassifier(CTX+HAAR)
+    img_haar = haar.detectMultiScale(param, minSize=(150, 150))
+    if len(img_haar) == 0:
+        print("얼굴인식 실패")
+        quit()
+    for (x, y, w, h) in img_haar:
+        print(f'얼굴의 좌표 : {x},{y},{w},{h}')
+        cv.rectangle(param, (x, y), (x + w, y + h), (255, 0, 0), thickness=20)
+    return (x, y, x + w, y + h)
+
+def mosaic(*params):
+    img = params[0]
+    rect = params[1]
+    size = params[2]
+    (x1, y1, x2, y2) = rect
+    w = x2 - x1
+    h = y2 - y1
+    i_rect = img[y1:y2, x1:x2]
+    i_small = cv.resize(i_rect, (size, size))
+    i_mos = cv.resize(i_small, (w, h), interpolation=cv.INTER_AREA)
+    img2 = img.copy()
+    img2[y1:y2, x1:x2] = i_mos
+    return img2
+
+
+def Mosaics(img, size):
+    haar = cv.CascadeClassifier(CTX+HAAR)
+    dst = copy.deepcopy(img)
+    face = haar.detectMultiScale(dst, minSize=(150, 150))
+    for (x, y, w, h) in face:
+        print(f'얼굴의 좌표 : {x},{y},{w},{h}')
+        (x1, y1, x2, y2) = (x, y, (x+w), (y+h))
+        w = x2 - x1
+        h = y2 - y1
+        i_rect = img[y1:y2, x1:x2]
+        i_small = cv.resize(i_rect, (size, size))
+        i_mos = cv.resize(i_small, (w, h), interpolation=cv.INTER_AREA)
+        dst[y1:y2, x1:x2] = i_mos
+    return dst
 
 def GaussianBlur(src, sigmax, sigmay):
         # 가로 커널과 세로 커널 행렬을 생성
@@ -127,8 +177,7 @@ def filter2D(src, kernel, delta=0):
             # 필터링 연산
             dst[x, y] = (kernel * cornerPixel[x: x + kernel.shape[0], y: y + kernel.shape[1]]).sum() + delta
     return dst
-def canny(params):
-    return cv.canny(params)
+
 
     '''람다식 프로토타입
     def new_model(self,fname) -> object:
@@ -143,21 +192,24 @@ def Hough(edges):
             pt1 = (lines[i][0][0], lines[i][0][1])
             pt2 = (lines[i][0][2], lines[i][0][3])
             cv.line(hough, pt1, pt2, (255, 0, 0), 2, cv.LINE_AA)
+    return hough
 
 
-def Haar(*params):
-    HAAR = params[0]
-    img = params[1]
-    haar = HAAR.detectMultiScale(img, minSize=(150, 150))
-    if haar.size == 0:
+def Haar(param):
+    haar = cv.CascadeClassifier(CTX+HAAR)
+    haar_img = haar.detectMultiScale(param, minSize=(150, 150))
+    if len(haar_img) == 0:
         print("얼굴인식 실패")
         quit()
-    for (x, y, w, h) in haar:
+    for (x, y, w, h) in haar_img:
         print(f'얼굴의 좌표 : {x},{y},{w},{h}')
-        cv.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), thickness=20)
+        cv.rectangle(param, (x, y), (x + w, y + h), (255, 0, 0), thickness=20)
     return (x, y, x + w, y + h)
 
-def Mosaic(img, rect, size):
+def Mosaic(*params):
+    img = params[0]
+    rect = params[1]
+    size = params[2]
     (x1, y1, x2, y2) = rect
     w = x2 - x1
     h = y2 - y1
@@ -170,8 +222,8 @@ def Mosaic(img, rect, size):
 
 
 def Mosaics(img, size):
-    haar = cv.CascadeClassifier(HAAR)
-    dst = img.copy()
+    haar = cv.CascadeClassifier(CTX+HAAR)
+    dst = copy.deepcopy(img)
     face = haar.detectMultiScale(dst, minSize=(150, 150))
     for (x, y, w, h) in face:
         print(f'얼굴의 좌표 : {x},{y},{w},{h}')
