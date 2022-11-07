@@ -1,11 +1,8 @@
-
 import urllib
 from dataclasses import dataclass
 from urllib.request import urlopen
-
 import pandas as pd
 from bs4 import BeautifulSoup
-
 from const.path import CTX
 
 """
@@ -131,7 +128,7 @@ class MusicRank:
     def soup(self,soup): self._soup = soup
 
     def dict_to_dataframe(self):
-        self.df = pd.DataFrame.from_dict((self.dic, orient='index'))
+        self.df = pd.DataFrame.from_dict(self.dic, orient='index')
 
     def dataframe_to_csv(self):
         path = CTX +self.fname+ '.csv'
