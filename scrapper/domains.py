@@ -38,7 +38,7 @@ class Melon:
 
 @dataclass
 class MusicRank:
-    html : str
+
     parser : str
     domain : str
     query_str : str
@@ -52,41 +52,80 @@ class MusicRank:
     df : None
     soup : BeautifulSoup
 
+
+    @property
+    def html(self) -> str: return self._html
     @html.setter
     def html(self, html): self._html = html
+
+    @property
+    def parser(self) -> str: return self.parser
 
     @parser.setter
     def parser(self, parser): self._parser = parser
 
+    @property
+    def domain(self) -> str: return self.domain
+
     @domain.setter
     def domain(self, domain): self._domain = domain
+
+    @property
+    def query_str(self) -> str: return self.query_str
 
     @query_str.setter
     def query_str(self, query_str): self._query_str = query_str
 
+    @property
+    def headers(self) -> str: return self.headers
+
     @headers.setter
     def headers(self, headers): self._headers = headers
+
+    @property
+    def tag_name(self) -> str: return self.tag_name
 
     @tag_name.setter
     def tag_name(self, tag_name): self._tag_name = tag_name
 
+    @property
+    def fname(self) -> str: return self.fname
+
     @fname.setter
     def fname(self, fname): self._fname = fname
+
+    @property
+    def class_names(self) -> str: return self.class_names
 
     @class_names.setter
     def class_names(self, class_names): self._class_names = class_names
 
+    @property
+    def artists(self) -> str: return self.artists
+
     @artists.setter
     def artists(self, artists): self._artists = artists
+
+    @property
+    def titles(self) -> str: return self.titles
 
     @titles.setter
     def titles(self, titles): self._titles = titles
 
+    @property
+    def dic(self) -> str: return self.dic
+
     @dic.setter
     def dic(self, dic): self._dic = dic
 
+    @property
+    def df(self) -> str: return self.df
+
     @df.setter
     def df(self, df): self._df = df
+
+    @property
+    def soup(self) -> str: return self.soup
 
     @soup.setter
     def soup(self,soup): self._soup = soup
