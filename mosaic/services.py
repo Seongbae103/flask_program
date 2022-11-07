@@ -7,9 +7,10 @@ import requests
 from PIL import Image
 
 from const.crawler import HEADERS
-from const.path import HAAR
-from util.dataset import Dataset
 import matplotlib.pyplot as plt
+
+from const.path import CTX, HAAR
+
 
 def image_read(fname) -> object:
     return (lambda x: cv.imread('./data/'+x))(fname)
@@ -145,17 +146,17 @@ def Hough(edges):
             cv.line(hough, pt1, pt2, (255, 0, 0), 2, cv.LINE_AA)
 
 
-def Haar(*params):
-    HAAR = params[0]
-    img = params[1]
-    haar = HAAR.detectMultiScale(img, minSize=(150, 150))
-    if haar.size == 0:
+def Haar(param):
+    haar = cv.CascadeClassifier(CTX+HAAR)
+    haar = haar.detectMultiScale(img, minSize=(150, 150))
+    if len() == 0:
         print("얼굴인식 실패")
         quit()
     for (x, y, w, h) in haar:
         print(f'얼굴의 좌표 : {x},{y},{w},{h}')
         cv.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), thickness=20)
     return (x, y, x + w, y + h)
+
 
 def Mosaic(img, rect, size):
     (x1, y1, x2, y2) = rect

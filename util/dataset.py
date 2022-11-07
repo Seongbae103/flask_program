@@ -17,7 +17,7 @@ class Dataset(object):
         pass
 
     @property
-    def context(self) -> str: return './data/'
+    def context(self) -> str: return self._context
 
 
     @context.setter
