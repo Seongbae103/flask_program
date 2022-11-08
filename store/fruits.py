@@ -1,35 +1,16 @@
-class Fruit(object):
-    def __init__(self,fname):
-        self.fname = fname
+import pandas as pd
 
-    @staticmethod
-    def print_menu():
-        print("1. 과일 등록")
-        print("2. 과일 목록")
-        print("3. 삭제")
-        print("4. 종료")
-        return int(input("실행 메뉴 : "))
+def fruits():
+    ls1 = ['제품', '가격', '판매']
+    ls2 = ['사과', '딸기', '수박', '평균']
+    ls3 = [1800, 1500, 3000]
+    ls4 = [24, 38, 13]
+    column = [ls2, ls3, ls4]
+    ls3.append(sum(ls3)/len(ls3))
+    ls4.append(sum(ls4)/len(ls4))
+    dc = {j : column[i] for i, j in enumerate(ls1)}
+    df = pd.DataFrame(dc)
+    print(df)
 
-    @classmethod
-    def add_fruit(ls):
-        return Fruit(input("과일 이름 : "))
-
-    @staticmethod
-    def main():
-        ls = []
-        while True:
-            menu = Fruit.print_menu()
-            if menu == 1:
-                print("과일 등록")
-                ls.append(Fruit.add_fruit())
-            elif menu == 2:
-                print("과일 목록")
-                Fruit.add_fruit(ls)
-            elif menu == 3:
-                print("삭제")
-            elif menu == 4:
-                print("종료")
-
-
-
-Fruit.main()
+if __name__ == '__main__':
+    fruits()
