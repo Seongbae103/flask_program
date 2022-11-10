@@ -1,6 +1,3 @@
-from util.common import Common
-
-
 class Bmi(object):
     def __init__(self, name, h, kg):
         self.name = name

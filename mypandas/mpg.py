@@ -71,7 +71,6 @@ class Mpg(object):
         self.mpg = pd.read_csv('./data/mpg.csv')
         self.my_mpg = None
         self.count_test = None
-
     def menu_1(self):
         print(self.mpg.head())
     def menu_2(self):
@@ -138,7 +137,7 @@ class Mpg(object):
         elif compact < suv:
             print('suv의 연비가 더 좋다')
     def menu_15(self):
-        self.menu_7()                                 ####????????????
+        self.menu_7()
         audi = self.my_mpg.query("차종 == 'audi'")
         print(audi.sort_values(['시외연비'], ascending=[False]).head(5))
     def menu_16(self):
