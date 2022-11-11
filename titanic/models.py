@@ -1,5 +1,8 @@
 import numpy as np
 import pandas as pd
+from sklearn.metrics import accuracy_score
+from sklearn.tree import DecisionTreeClassifier
+
 from flaskProject.util.dataset import Dataset
 from sklearn.model_selection import KFold
 from sklearn.model_selection import cross_val_score
@@ -124,6 +127,13 @@ class TitanicModel(object):
                                 n_jobs=1,
                                 scoring='accuracy')
         return round(np.mean(score)*100,2)
+
+    @staticmethod
+    def get_decision(this):
+        dt = DecisionTreeClassifier(random_state=11)
+        dt.fit(this.create_train(), this.create_label())
+        dt = dt.predict(this.create_train())
+        print('DecisionTreeClassifier 정확도: {0:.4f}'.format(accuracy_score(this.create_label(), dt)))
 
 if __name__ =='__main__':
     t = TitanicModel()
