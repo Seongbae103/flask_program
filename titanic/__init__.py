@@ -1,6 +1,6 @@
-from titanic.template import Plot
-from titanic.views import TitanicController
-from util.common import Common
+from flaskProject.titanic.template import Plot
+from flaskProject.titanic.views import TitanicController
+from flaskProject.util.common import Common
 
 if __name__ == '__main__':
     api = TitanicController()

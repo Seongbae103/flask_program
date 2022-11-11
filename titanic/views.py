@@ -1,5 +1,5 @@
-from titanic.models import TitanicModel
-from util.dataset import Dataset
+from flaskProject.titanic.models import TitanicModel
+from flaskProject.util.dataset import Dataset
 
 
 class TitanicController(object):
@@ -35,9 +35,10 @@ class TitanicController(object):
         this.train = model.create_train(this)
         return this
 
-    def learning(self):
-        pass
-
+    def learning(self, train, test):
+        this = self.modeling(train, test)
+        accuracy = self.model.get_accuracy(this)
+        print(f'사이킷런 알고리즘 정확도 : {accuracy} % ')
     def submit(self):
         pass
 

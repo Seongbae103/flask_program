@@ -1,8 +1,11 @@
-from titanic.models import TitanicModel
-from util.dataset import Dataset
+
 import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib import font_manager, rc
+
+from flaskProject.titanic.models import TitanicModel
+from flaskProject.util.dataset import Dataset
+
 font_path = "C:/Windows/Fonts/gulim.ttc"
 font = font_manager.FontProperties(fname=font_path).get_name()
 rc('font', family=font)
