@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.tree import DecisionTreeClassifier
-
 from flaskProject.util.dataset import Dataset
 from sklearn.model_selection import KFold
 from sklearn.model_selection import cross_val_score
@@ -131,10 +131,16 @@ class TitanicModel(object):
     @staticmethod
     def get_decision(this):
         dt = DecisionTreeClassifier(random_state=11)
-        dt.fit(this.create_train(), this.create_label())
-        dt = dt.predict(this.create_train())
-        print('DecisionTreeClassifier 정확도: {0:.4f}'.format(accuracy_score(this.create_label(), dt)))
+        dt.fit(this.train, this.label)
+        dt = dt.predict(this.train)
+        print('결정트리 정확도: {0:.4f}'.format(accuracy_score(this.label, dt)))
 
+    @staticmethod
+    def get_logistic(this):
+        logi = LogisticRegression()
+        logi.fit(this.train, this.label)
+        lr_pred = logi.predict(this.train)
+        print('로지스틱 회귀 정확도: {0:.4f}'.format(accuracy_score(this.label, lr_pred)))
 if __name__ =='__main__':
     t = TitanicModel()
     this = Dataset()

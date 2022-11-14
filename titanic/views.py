@@ -38,9 +38,10 @@ class TitanicController(object):
     def learning(self, train, test):
         this = self.modeling(train, test)
         accuracy = self.model.get_accuracy(this)
-        accuracy_dt = self.model.get_decision(this)
         print(f'랜덤포레스트분류기 정확도 : {accuracy} % ')
-        print(f'랜덤포레스트분류기 정확도 : {accuracy_dt} % ')
+        decision = self.model.get_decision(this)
+        logistic = self.model.get_logistic(this)
+
     def submit(self):
         pass
 

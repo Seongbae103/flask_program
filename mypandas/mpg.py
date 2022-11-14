@@ -59,14 +59,11 @@ my_meta = {
     "class": "차종"
 }
 
-def list():
-    for i, j in enumerate(MENUS):
-        print(f' {i}. {j}')
-    return input('실행 : ')
+
 
 mpg = pd.read_csv('./data/mpg.csv')
 
-class Mpg(object):
+class MpgService(object):
     def __init__(self):
         self.mpg = pd.read_csv('./data/mpg.csv')
         self.my_mpg = None
