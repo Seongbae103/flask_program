@@ -1,4 +1,3 @@
-import pandas as pd
 
 STROKE_MENUS = ["종료", #0
                 "데이터구하기",#1
@@ -23,12 +22,12 @@ stroke_meta = {
     'smoking_status':'흡연 여부',
     'stroke':'뇌졸중'}
 stroke_menu = {
-    "1" : lambda t: t.spec(),
-    "2" : lambda t: t.rename_meta(),
-    "3" : lambda t: t.target(),
-    "3" : lambda t: t.visualize(),
-    "4" : lambda t: t.compare_displ(),
-    "5" : lambda t: t.find_high_cty(),
+    "1" : lambda t: t.menu_1(),
+    "2" : lambda t: t.menu_2(),
+    "3" : lambda t: t.menu_3(),
+    "4" : lambda t: t.menu_4(),
+
+    "5" : lambda t: t.menu_5(),
     "6" : lambda t: t.find_highest_hwy(),
     "7" : lambda t: t.which_cty_in_suv_compact(),
     "8" : lambda t: t.find_top5_hwy_in_audi(),
@@ -57,41 +56,3 @@ memory usage: 479.2+ KB
 None
 '''
 
-class StrokeService:
-    def __init__(self):
-        self.stroke = pd.read_csv('./data/healthcare-dataset-stroke-data.csv')
-        self.my_stroke = None
-    '''
-    1.스펙보기
-    '''
-    def spec(self):
-        print(" --- 1.Shape ---")
-        print(self.stroke.shape)
-        print(" --- 2.Features ---")
-        print(self.stroke.columns)
-        print(" --- 3.Info ---")
-        print(self.stroke.info())
-        print(" --- 4.Case Top1 ---")
-        print(self.stroke.head(1))
-        print(" --- 5.Case Bottom1 ---")
-        print(self.stroke.tail(3))
-        print(" --- 6.Describe ---")
-        print(self.stroke.describe())
-        print(" --- 7.Describe All ---")
-        print(self.stroke.describe(include='all'))
-    '''
-    2.한글 메타데이터
-    '''
-    def rename_meta(self):
-        self.my_stroke = self.stroke.rename(columns=stroke_meta)
-        print(" --- 2.Features ---")
-        print(self.my_stroke.columns)
-
-    '''
-    3. 타깃변수(=종속변수 dependent, y값) 설정
-    입력변수(= 설명변수, 확률변수, X값)
-    타깃변수명 :stroke (=뇌졸중)
-    타깃 변수값 : 과거에 한 번이라도 뇌졸중이 발병했으면 1, 아니면 0
-    '''
-    def target(self):
-        pass

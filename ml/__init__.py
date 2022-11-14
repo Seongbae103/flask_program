@@ -1,4 +1,6 @@
-from flaskProject.ml.stroke import StrokeService, STROKE_MENUS, stroke_menu
+from flaskProject.ml.stroke import STROKE_MENUS, stroke_menu
+from flaskProject.ml.views import StrokeService
+
 
 def my_menu(ls):
     for i, j in enumerate(ls):

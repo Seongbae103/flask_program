@@ -4,14 +4,11 @@ import cv2 as cv
 import numpy as np
 import requests
 from PIL import Image
-from const.crawler import HEADERS
-<<<<<<< HEAD
-=======
-from const.path import HAAR, CTX
->>>>>>> e6f850e96cf78f1fcb2aaccf9f4f94ac37bfa291
+
 import matplotlib.pyplot as plt
 
-from const.path import CTX, HAAR
+from flaskProject.const.crawler import HEADERS
+from flaskProject.const.path import CTX, HAAR
 
 
 def image_read(fname) -> object:
@@ -95,18 +92,15 @@ def Canny(src, lowThreshold, highThreshold):
         G = np.hypot(Ix, Iy)  # 피타고라스 빗변 구하기
         img = G / G.max() * 255  # 엣지를 그레이스케일로 표현
         D = np.arctan2(Iy, Ix)  # 아크탄젠트 이용해서 그래디언트를 구함
-
         M, N = img.shape
         Z = np.zeros((M, N), dtype=np.int32)  # 이미지 크기만큼의 행렬을 생성
         angle = D * 180. / np.pi  # 라디안을 degree로 변환(정확하지 않음)
         angle[angle < 0] += 180  # 음수일 때 180을 더함
-
         for i in range(1, M - 1):
             for j in range(1, N - 1):
                 try:
                     q = 255
                     r = 255
-
                     # angle 0
                     if (0 <= angle[i, j] < 22.5) or (157.5 <= angle[i, j] <= 180):
                         q = img[i, j + 1]
@@ -123,35 +117,26 @@ def Canny(src, lowThreshold, highThreshold):
                     elif (112.5 <= angle[i, j] < 157.5):
                         q = img[i - 1, j - 1]
                         r = img[i + 1, j + 1]
-
                     if (img[i, j] >= q) and (img[i, j] >= r):  # 주변 픽셀(q, r)보다 크면 img 행렬의 값을 그대로 사용
                         Z[i, j] = img[i, j]
                     else:  # 그렇지 않을 경우 0을 사용
                         Z[i, j] = 0
-
                 except IndexError as e:  # 인덱싱 예외 발생 시 pass
                     pass
-
         M, N = img.shape
         res = np.zeros((M, N), dtype=np.int32)
-
         weak = np.int32(25)  # 약한 에지
         strong = np.int32(255)  # 강한 에지
-
         # 이중 임곗값 비교
-
         # 최대 임곗값보다 큰 원소의 인덱스를 저장
         strong_i, strong_j = np.where(img >= highThreshold)
         # 최소 임곗값보다 작은 원소의 인덱스를 저장
         zeros_i, zeros_j = np.where(img < lowThreshold)
-
         # 최소 임곗값과 최대 임곗값 사이에 있는 원소의 인덱스를 저장
         weak_i, weak_j = np.where((img <= highThreshold) & (img >= lowThreshold))
-
         # 각각 강한 에지와 약한 에지의 값으로 저장
         res[strong_i, strong_j] = strong
         res[weak_i, weak_j] = weak
-
         for i in range(1, M - 1):
             for j in range(1, N - 1):
                 if (img[i, j] == weak):
@@ -185,11 +170,6 @@ def filter2D(src, kernel, delta=0):
     return dst
 
 
-    '''람다식 프로토타입
-    def new_model(self,fname) -> object:
-    img = cv2.imread('./data/'+fname)
-    return img'''
-
 def Hough(edges):
     lines = cv.HoughLinesP(edges, 1, np.pi / 180., 120, minLineLength=50, maxLineGap=5)
     hough = cv.cvtColor(edges, cv.COLOR_GRAY2BGR)
@@ -203,13 +183,10 @@ def Hough(edges):
 
 def Haar(param):
     haar = cv.CascadeClassifier(CTX+HAAR)
-<<<<<<< HEAD
     haar = haar.detectMultiScale(img, minSize=(150, 150))
     if len() == 0:
-=======
-    haar_img = haar.detectMultiScale(param, minSize=(150, 150))
+        haar_img = haar.detectMultiScale(param, minSize=(150, 150))
     if len(haar_img) == 0:
->>>>>>> e6f850e96cf78f1fcb2aaccf9f4f94ac37bfa291
         print("얼굴인식 실패")
         quit()
     for (x, y, w, h) in haar_img:
@@ -217,15 +194,11 @@ def Haar(param):
         cv.rectangle(param, (x, y), (x + w, y + h), (255, 0, 0), thickness=20)
     return (x, y, x + w, y + h)
 
-<<<<<<< HEAD
 
-def Mosaic(img, rect, size):
-=======
 def Mosaic(*params):
     img = params[0]
     rect = params[1]
     size = params[2]
->>>>>>> e6f850e96cf78f1fcb2aaccf9f4f94ac37bfa291
     (x1, y1, x2, y2) = rect
     w = x2 - x1
     h = y2 - y1
