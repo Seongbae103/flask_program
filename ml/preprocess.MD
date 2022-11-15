@@ -142,7 +142,3 @@ ML모델 수립|
         annot_kws ={"ha" : 'center', "va": 'top'}
         sns.heatmap(data=corr, annot= True, annot_kws=annot_kws, cmap="YlGnBu")
         df2.to_csv('healthcare-dataset-stroke-data.csv', index=False)
-
-###
-- Null
-- Outlier

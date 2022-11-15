@@ -141,6 +141,7 @@ class TitanicModel(object):
         logi.fit(this.train, this.label)
         lr_pred = logi.predict(this.train)
         print('로지스틱 회귀 정확도: {0:.4f}'.format(accuracy_score(this.label, lr_pred)))
+
 if __name__ =='__main__':
     t = TitanicModel()
     this = Dataset()

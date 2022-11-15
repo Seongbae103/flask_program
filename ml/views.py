@@ -1,10 +1,10 @@
 import pandas as pd
 from matplotlib import pyplot as plt
 import seaborn as sns
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OrdinalEncoder
-
 from flaskProject.ml.stroke import stroke_meta
-
+from imblearn.under_sampling import RandomUnderSampler
 
 class StrokeService:
     def __init__(self):
@@ -41,7 +41,7 @@ class StrokeService:
     타깃변수명 :stroke (=뇌졸중)
     타깃 변수값 : 과거에 한 번이라도 뇌졸중이 발병했으면 1, 아니면 0
     '''
-    def interal_variables(self):
+    def interval_variables(self):
         print(self.my_stroke['아이디'].dtypes)
         print(self.my_stroke['아이디'].isnull().sum())
         print(len(pd.unique(self.my_stroke['아이디'])))
@@ -129,10 +129,27 @@ class StrokeService:
     def ordinal_variables(self): #해당 column이 없음
         pass
 
+    def sampling(self):
+        df = pd.read_csv('./save/stroke.csv')
+        data = df.drop(['뇌졸중'], axis=1)
+        undersample = RandomUnderSampler(sampling_strategy=0.333, random_state=2)
+        target = df['뇌졸중']
+        data_under, target_under = undersample.fit_resample(data, target)
+        print(target_under.value_counts(dropna=True))
+        x_train, x_test, y_train, y_test = train_test_split(data_under, target_under, test_size=0.5, random_state=42, stratify=target_under)
+        print("x_train shape : ", x_train.shape)
+        print("x_test shape : ", x_test.shape)
+        print("y_train shape : ", y_train.shape)
+        print("y_test shape : ", y_test.shape)
+        print(y_train.value_counts(normalize=True))
+        print(y_train.value_counts())
+
+
+
     '''
     5. 시각화
     '''
-    def menu_5(self):
+    def visual(self):
         df = self.my_stroke
         '''나이에 대한 그래프'''
         print(sns.histplot(data=df, x='나이', hue="뇌졸중", bins=20))
