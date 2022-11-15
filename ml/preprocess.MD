@@ -1,4 +1,31 @@
-# 
+# 흐름도
+프로젝트 흐름도|
+---|
+데이터구하기|
+타깃 변수 설정|
+데이터 처리|
+시각화|
+ML모델 수립|
+모델 실행|
+모델 선정 및 활용|
+#### ↘시각화
+> 결측값 제거 
+
+> ->구간변수
+>> 요약 통계 검토
+> 
+>> 이상값 제거
+> 
+>> 상관관계 검토
+> 
+>> 시각화
+> 
+>> t검정
+
+> -> 범주형변수
+>> 도수분포표 검토
+> 
+>> 시각화
 # 1. 타깃변수 설정
 # 2. csv파일 불러오기
     import pandas as pd  -> 판다스 라이브러리
@@ -80,7 +107,9 @@
     - 분할표(=빈도분포)
         * pd.crosstab(df1['직종'], df1['뇌졸중'])
         * pd.crosstab(df1['직종'], df1['뇌졸중'], normalize = True)
-##### (2) 이상값 제거
+##### (2) 이상값 제거 
+> -> 통계에 영향을 주니까 제거해야 한다
+
     fig, axes = plt.subplots(1, 3, figsize=(15,4))
     sns.histplot(ax=axes[0], data=df, x="나이", kde=True, bins=20)
     sns.histplot(ax=axes[1], data=df, x="평균 혈당", kde=True, bins=20)
@@ -113,3 +142,7 @@
         annot_kws ={"ha" : 'center', "va": 'top'}
         sns.heatmap(data=corr, annot= True, annot_kws=annot_kws, cmap="YlGnBu")
         df2.to_csv('healthcare-dataset-stroke-data.csv', index=False)
+
+###
+- Null
+- Outlier

@@ -1,6 +1,8 @@
 import pandas as pd
 from matplotlib import pyplot as plt
 import seaborn as sns
+from sklearn.preprocessing import OrdinalEncoder
+
 from flaskProject.ml.stroke import stroke_meta
 
 
@@ -39,7 +41,7 @@ class StrokeService:
     타깃변수명 :stroke (=뇌졸중)
     타깃 변수값 : 과거에 한 번이라도 뇌졸중이 발병했으면 1, 아니면 0
     '''
-    def menu_3(self):
+    def interal_variables(self):
         print(self.my_stroke['아이디'].dtypes)
         print(self.my_stroke['아이디'].isnull().sum())
         print(len(pd.unique(self.my_stroke['아이디'])))
@@ -102,7 +104,30 @@ class StrokeService:
         corr = df2[cols].corr()
         annot_kws ={"ha" : 'center', "va": 'top'}
         sns.heatmap(data=corr, annot= True, annot_kws=annot_kws, cmap="YlGnBu")
-        df2.to_csv('healthcare-dataset-stroke-data.csv', index=False)
+
+
+    '''
+    4.범주형 = ['성별', '심장병', '기혼여부', '직종', '거주형태','흡연여부', '고혈압']
+    '''
+    def nominal_variables(self):
+        t = self.df2
+        category = ['성별', '심장병', '기혼여부', '직종', '거주형태', '흡연여부', '고혈압']
+        print(f'범주형변수 데이터타입\n {t[category].dtypes}')
+        print(f'범주형변수 결측값\n {t[category].isnull().sum()}')
+        print(f'결측값 있는 변수\n {t[category].isna().any()[lambda x: x]}')  # 결측값이 없음
+        t['성별'] = OrdinalEncoder().fit_transform(t['성별'].values.reshape(-1, 1))
+        t['기혼여부'] = OrdinalEncoder().fit_transform(t['기혼여부'].values.reshape(-1, 1))
+        t['직종'] = OrdinalEncoder().fit_transform(t['직종'].values.reshape(-1, 1))
+        t['거주형태'] = OrdinalEncoder().fit_transform(t['거주형태'].values.reshape(-1, 1))
+        t['흡연여부'] = OrdinalEncoder().fit_transform(t['흡연여부'].values.reshape(-1, 1))
+
+        self.stroke = t
+        self.spec()
+        print(" ### 프리프로세스 종료 ### ")
+        self.stroke.to_csv("./save/stroke.csv")
+
+    def ordinal_variables(self): #해당 column이 없음
+        pass
 
     '''
     5. 시각화
