@@ -1,6 +1,7 @@
 import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
+from sklearn.model_selection import train_test_split
 
 OKLAHOMA_MENUS = ["exit", #0
                 "data",#1
@@ -52,7 +53,8 @@ oklahoma_menu = {
     "4" : lambda t: t.ratio(),
     "5" : lambda t: t.nominal(),
     "6" : lambda t: t.ordinal(),
-    "7" : lambda t: t.target()
+    "7" : lambda t: t.target(),
+    "8" : lambda t: t.partition()
 }
 class Oklahoma():
     def __init__(self):
@@ -83,54 +85,7 @@ class Oklahoma():
         return self.oklahoma_home
 
     def interval(self):
-        ok_home = self.oklahoma
-        pd.options.display.float_format = '{:.2f}'.format
-        cols1 = ['나이','침실수','CONP','월전기료','월가스비','가계소득','자녀수','방수','주택가격']
-        print(ok_home[cols1].describe())
-        print(ok_home[cols1].skew())
-        print(ok_home[cols1].kurtosis())
-        print(ok_home[cols1].value_counts())
-        pd.options.display.float_format='{:.3f}'.format
-        print(ok_home['CONP'].value_counts())
-        ok_home.drop('CONP', axis=1, inplace=True)
-        print(ok_home.shape)
-
-        '''이상값 제거'''
-        '''산포도'''
-        df1 = ok_home[["침실수", '자녀수', '방수', '주택가격']]
-        g = sns.PairGrid(df1)
-        g.map_diag(sns.histplot)
-        g.map_offdiag(sns.scatterplot)
-        '''IQR계산'''
-        Q1 = ok_home[['침실수','자녀수', '방수']].quantile(0.25)
-        Q3 = ok_home[['침실수','자녀수', '방수']].quantile(0.75)
-        IQR = Q3 - Q1
-        print(IQR)
-        '''IQR 상한, 하한'''
-        Lower = Q1 - 3.0 * IQR
-        Upper = Q3 + 3.0 * IQR
-        print(Lower)
-        print(Upper)
-        print(ok_home[['침실수', '자녀수', '방수']].min())
-        print(ok_home[['침실수', '자녀수', '방수']].max())
-
-        dft2 = ok_home[['나이','월전기료','월가스비','가계소득','주택가격']]
-        g= sns.PairGrid(dft2)
-        print(g.map_diag(sns.histplot))
-        print(g.map_offdiag(sns.scatterplot))
-        Q1 = ok_home[['나이', '월전기료','월가스비','가계소득','주택가격']].quantile(0.25)
-        Q3 = ok_home[['나이', '월전기료','월가스비','가계소득','주택가격']].quantile(0.75)
-        IQR = Q3 - Q1
-        print(IQR)
-        '''IQR 상한, 하한'''
-        Lower = Q1 - 3.0 * IQR
-        Upper = Q3 + 3.0 * IQR
-        print(Lower)
-        print(Upper)
-        print(ok_home[['나이', '월전기료','월가스비','가계소득']].min())
-        print(ok_home[['나이', '월전기료','월가스비','가계소득','주택가격']].max())
-
-        '''p.218'''
+        ok_home = self.oklahoma_home
         c1 = ok_home['월전기료']<= 500
         c2 = ok_home['월가스비']<=311
         c3 = ok_home['가계소득']<=320000
@@ -149,18 +104,17 @@ class Oklahoma():
         sns.histplot(ax=axes[1], data=df1, x="월가스비", kde=True, bins=23)
         axes[1].set_title('월가스비 after')
 
-        cols2 = []
         self.oklahoma = ok_home
 
     def ratio(self):
-        ok_home = self.oklahoma
+        ok_home = self.oklahoma_home
         print(pd.crosstab(ok_home['MAR'], columns='ratio', normalize=True))
         print(pd.crosstab(ok_home['MAR'], ok_home['지하주택가격'], normalize=True))
 
         self.oklahoma = ok_home
 
     def nominal(self):
-        ok_home = self.oklahoma
+        ok_home = self.oklahoma_home
         ok_home['MAR'].value_counts(dropna=False)
         print(pd.crosstab(ok_home['MAR'], columns='count'))
         print(pd.crosstab(ok_home['MAR'], ok_home['지하주택가격']))
@@ -171,12 +125,15 @@ class Oklahoma():
         pass
 
     def target(self):
-        print(self.oklahoma['지하주택가격'].dtype)
-        print(self.oklahoma['지하주택가격'].isnull().sum())
-        print(self.oklahoma['지하주택가격'].value_counts(dropna=False, normalize=True))
+        self.data = self.oklahoma.drop(['주택가격'], axis=1)
+        self.label = self.oklahoma['주택가격']
+        print(self.data.shape)
+        print(self.label.shape)
+        return self.data, self.label
 
-
-
-
-
-
+    def partition(self):
+        X_train, X_test, y_train, y_test = train_test_split(self.data, self.label, test_size=0.5, random_state=42)
+        print(X_train.shape)
+        print(X_test.shape)
+        print(y_train.shape)
+        print(y_test.shape)
