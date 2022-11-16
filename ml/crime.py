@@ -36,13 +36,14 @@ crime_menu = {
     "6" : lambda t: t.ordinal(),
     "7" : lambda t: t.target(),
     "8" : lambda t: t.partition(),
-    "9" : lambda t: print(" ** No Function ** "),
+    "9" : lambda t: t.popu(),
 
 }
 class Crime:
     def __init__(self):
         self.cctv = pd.read_csv('./data/cctv_in_seoul.csv')
         self.seoul_crime = pd.read_csv('./data/crime_in_seoul.csv')
+        self.population = pd.read_excel('./data/pop_in_seoul.xls', usecols=[1,3,6,9,13], skiprows=[0,2])
 
     def spec(self):
         pd.set_option('display.max_columns', None)
@@ -54,7 +55,7 @@ class Crime:
                                f"--- 5.Case Bottom1 ---\n{x.tail(3)}"
                                f"--- 6.Describe ---{x.describe()}"
                                f"--- 7.Describe All ---\n{x.describe(include='all')}"))(i) for i in [self.seoul_crime, self.cctv]]
-
+        print(self.population)
     def save_police_pos(self):
         crime = self.seoul_crime
         station_names = []
