@@ -1,5 +1,5 @@
 from flaskProject.ml.stroke import STROKE_MENUS, stroke_menu
-from flaskProject.ml.views import StrokeService
+from flaskProject.ml.stroke import StrokeService
 from flaskProject.ml.oklahoma import OKLAHOMA_MENUS, oklahoma_menu, Oklahoma
 
 

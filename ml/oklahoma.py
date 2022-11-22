@@ -58,7 +58,7 @@ oklahoma_menu = {
 }
 class Oklahoma():
     def __init__(self):
-        self.oklahoma = pd.read_csv('./data/comb32.csv')
+        self.oklahoma = pd.read_csv('../static/data/dam_crime/comb32.csv')
         self.oklahoma_home = None
 
     def spec(self):
@@ -137,3 +137,21 @@ class Oklahoma():
         print(X_test.shape)
         print(y_train.shape)
         print(y_test.shape)
+
+def my_menu(ls):
+    for i, j in enumerate(ls):
+        print(f"{i}. {j}")
+    return input('메뉴선택: ')
+
+if __name__ == '__main__':
+    t = Oklahoma()
+    while True:
+        menu = my_menu(OKLAHOMA_MENUS)
+        if menu == '0':
+            print("종료")
+            break
+        else:
+            try:
+                oklahoma_menu[menu](t)
+            except KeyError:
+                print(" ### Error ### ")

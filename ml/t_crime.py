@@ -80,17 +80,17 @@ def MyChoroplethService(vo):
 class Crime:
 
     def __init__(self):
-        self.crime = pd.read_csv('./data/crime_in_seoul.csv')
+        self.crime = pd.read_csv('../static/data/dam_crime/crime_in_seoul.csv')
         cols = ['절도 발생','절도 검거','폭력 발생', '폭력 검거']
         self.crime[cols] = self.crime[cols].replace(',', '', regex=True).astype(int)  # regex=True
-        self.cctv = pd.read_csv('./data/cctv_in_seoul.csv')
+        self.cctv = pd.read_csv('../static/data/dam_crime/cctv_in_seoul.csv')
         self.pop = pd.read_excel('./data/pop_in_seoul.xls',usecols=["자치구","합계","한국인","등록외국인","65세이상고령자"], skiprows=[0,2])
         self.ls = [self.crime, self.cctv, self.pop]
         self.crime_rate_columns = ['살인검거율', '강도검거율', '강간검거율', '절도검거율', '폭력검거율']
         self.crime_columns = ['살인', '강도', '강간', '절도', '폭력']
         self.arrest_columns = ['살인 검거', '강도 검거', '강간 검거', '절도 검거', '폭력 검거']
         self.us_states = './data/us-states.json'
-        self.us_unemployment = pd.read_csv('./data/us_unemployment.csv')
+        self.us_unemployment = pd.read_csv('../static/data/dam_crime/us_unemployment.csv')
         self.kr_states = './data/kr-state.json'
         print(self.kr_states)
     '''
