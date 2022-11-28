@@ -41,7 +41,7 @@ class TitanicModel(object):
 
     def new_model(self, fname) -> object:
         this = self.dataset
-        this.context = './Data/'
+        this.context = './../../../../../static/data/dam_titanic/'
         this.fname = fname
         return pd.read_csv(this.context + this.fname)
 
